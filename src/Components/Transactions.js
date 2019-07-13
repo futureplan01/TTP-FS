@@ -6,4 +6,4 @@ class Transactions extends Component{
     }
 }
 
-export default Transaction;
+export default Transactions;

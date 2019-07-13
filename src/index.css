@@ -2,10 +2,21 @@
   text-align: center;
 }
 
+.input{
+  width: 90%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+  height: 20px;
+  box-shadow: 1px 1px 1px 1px gray;
+}
+
 /*Sign In */
-#SignIn{
-  margin: 0 auto;
+#SignInContainer{
+  margin: 20%;
   border: 3px solid black;
+}
+#SignIn{
+
 }
 /*Register*/
 #Register{

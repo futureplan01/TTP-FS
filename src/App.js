@@ -12,9 +12,9 @@ function App() {
   return (
     <Switch>
       <Route exact path = "/" component={SignIn} />
-      <Route exact path = "/" component={Portfolio} />
-      <Route exact path = "/" component={Transactions} />
-      <Route exact path = "/" component={Register} />
+      <Route exact path = "/Portfolio" component={Portfolio} />
+      <Route exact path = "/Transaction" component={Transactions} />
+      <Route exact path = "/Register" component={Register} />
     </Switch>
   );
 }
