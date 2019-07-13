@@ -4,10 +4,12 @@ class SignIn extends Component{
     render(){
         return (
             <div id='SignInContainer'> 
+                <div>
                 <h1 id='SignIn' className='center'>Sign In</h1>
-                <input placeholder='Email' className='input center'/>
+                <input placeholder='Email' className='input'/>
                 <br/>
-                <input placeholder='Password' className='input center'/>
+                <input placeholder='Password' className='input'/>
+                </div>
             </div>
         );
     }

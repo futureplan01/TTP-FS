@@ -4,10 +4,16 @@ class Register extends Component{
     render(){
         return (
         <div id = 'SignInContainer'> 
-            <h1>Register</h1>
-            <input/>
-            <input/>
-            <input/>
+            <div>
+            <h1 className='center'>Register</h1>
+            <input placeholder = 'Name' className='input'/>
+            <br/>
+            <input placeholder = 'Email' className='input'/>
+            <br/>
+            <input placeholder = 'Password' className='input'/>
+            <br/>
+            <input placeholder = 'Confirm Password' className='input'/>
+            </div>
         </div>);
     }
 }
