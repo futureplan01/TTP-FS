@@ -14,8 +14,11 @@ let User = new Schema({
     },
 
     user_account:{
-        type: String
+        type: Number
     },
+    user_transaction:{
+        type: Array
+    }
 });
 
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('User', User,'users');
