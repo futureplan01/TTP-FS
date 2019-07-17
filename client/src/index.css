@@ -53,12 +53,16 @@
 }
 
 /*PortFolio*/
+.stock{
+  display: inline-block;
+  padding: 4px;
+}
 #Portfolio{
-  margin-left: 15%;
+  margin-left: 10%;
 }
 #PortfolioContainer{
   margin-top: 8%;
-  margin-left: 15%;
+  margin-left: 10%;
   padding-right: 20%;
   border-right: 1px black solid
 }
