@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from "react-router-dom";
 import logo from './logo.svg';
+import axios from 'axios';
 
 // COMPONENTS
 import SignIn from './Components/SignIn';
@@ -17,26 +18,42 @@ function ErrorPage(){
 class App extends Component {
   constructor (){
     super();
-    this.state = {Account: 0, Transaction: []};
+    this.state = { Transaction: [], User: {email:'',account: 0}};
     this.updateTransaction = this.updateTransaction.bind(this);
     this.updateAccount = this.updateAccount.bind(this);
     this.getAccount = this.getAccount.bind(this);
     this.getTransaction = this.getTransaction.bind(this);
+    this.updateUser=this.updateUser.bind(this);
   }
-
+  updateUser(x){
+    this.setState({User:x});
+  }
   updateTransaction(x){
     let array = this.state.Transaction;
     array.push(x);
     this.setState({Transaction: array});
   }
   updateAccount(x){
-    this.setState({Account: x});
+    let email = this.state.User.email;
+    axios.post('http://localhost:3010/updateAccount',{
+      crossDomain:true,
+      email: this.state.User.email.toLowerCase(),
+      account: this.state.User.account
+    }).then((user)=>{
+      console.log('HELLOOOOO');
+      if(user) {
+        console.log("We Made it fam");
+        console.log(user);
+      }
+    })
+    .catch((err)=>{console.log(err)})
+    this.setState({User:{email:email,account:x}});
   }
   getTransaction(){
     return this.state.Transaction
   }
   getAccount(){
-    return this.state.Account;
+    return this.state.User.account;
   }
 
 
@@ -44,7 +61,7 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path = "/" render={()=>
-          <SignIn updateAccount={this.updateAccount} />
+          <SignIn updateAccount={this.updateAccount} updateUser={this.updateUser}/>
         } />
         
         <Route exact path = "/Portfolio" render={()=>
@@ -56,7 +73,7 @@ class App extends Component {
         }/>
 
         <Route exact path = "/Register" render={()=>
-         <Register changeAccount={this.changeAccount}/>
+         <Register />
         }/>
 
         <Route component = {ErrorPage}/>

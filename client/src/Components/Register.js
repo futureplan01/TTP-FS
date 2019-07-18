@@ -42,7 +42,7 @@ class Register extends Component{
     render(){
         let ErrorMessage;
         if(this.state.isAuth){
-            return(<Redirect to="/portfolio"/>)
+            return(<Redirect to="/"/>)
         }
         if(this.state.error){
             ErrorMessage = <div className = "center"> 

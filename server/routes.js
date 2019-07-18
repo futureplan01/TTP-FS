@@ -31,10 +31,10 @@ router.post('/Register', (req,res)=>{
                     });
                     user.save((err,registerUser)=>{
                         if(err){
-                            res.json({error: err});
+                            res.status(400).json({error: err});
                             // send user an error notification
                         }else{
-                            res.status(200).send(registerUser);
+                            res.status(200).send({message: "success"});
                         }
                     });
                 })
@@ -42,19 +42,6 @@ router.post('/Register', (req,res)=>{
         }
     })
     .catch(err => res.json ({error: err}));
-})
-
-router.post('/Account', (req,res)=>{
-    let userData = req.body; 
-    let user = new User(userData);
-    user.save((err,registerUser)=>{
-        if(err){
-            res.status(200).json({error: err})
-            // send user an error notification
-        }else{
-            res.status(200).send(registerUser);
-        }
-    });
 })
 
 router.get('/AllUsers', (req,res)=>{
@@ -76,8 +63,11 @@ router.post('/SignIn', (req,res)=>{
         bcrypt.compare(password,user.user_password)
         .then(isMatch => {
             if(isMatch){
-                console.log(isMatch);
-                res.status(200).json(user)
+                let userInfo = {
+                    email: user.user_email,
+                    account: user.user_account
+                }
+                res.status(200).json(userInfo);
             }else{
                 res.status(401).json({success: false, message: "Wrong email/password"});
             }
@@ -88,48 +78,25 @@ router.post('/SignIn', (req,res)=>{
     });
 })
 
-// Get Account Balance
-router.get('/Account', (req,res)=>{
-    User.findOne({
-        user_email: req.body.email,
-        user_password: req.body.password
-    })
-    .then((users) => {
-        if(users){
-            res.status(200).json(users.account);
-        }else{
-            res.status(401).json({success: false, message: "Wrong email/password"});
-        }
-    });
-})
 // Update 
-router.post('/Account', (req,res)=>{
+router.post('/updateAccount', (req,res)=>{
     User.findOne({
         user_email: req.body.email,
-        user_password: req.body.password
     })
     .then((users) => {
         if(users){
-            users.account = req.body.account;
+            users.user_account = req.body.account;
         }else{
             //How is this possiblee
             res.status(401).json({success: false, message: "Wrong email/password"});
         }
-        users.save();
-    });
-    User.save();
-})
-
-// Get Transactions
-router.get('/Transaction', (req,res)=>{
-    let userData = req.body; 
-    let user = new User(userData);
-    user.save((err,registerUser)=>{
-        if(err){
-            res.status(500).json({message: 'Transaction Failed'});
-        }else{
-            res.status(200).send(registerUser);
-        }
+        users.save((err,savedUser)=>{
+            if(err){
+                console.log(err);
+            }else{
+                res.status(200);
+            }
+        });
     });
 })
 

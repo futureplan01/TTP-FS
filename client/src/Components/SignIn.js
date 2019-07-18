@@ -21,7 +21,7 @@ class SignIn extends Component{
             .then((user)=>{
                 if(user){
                     this.setState({isAuth: true});
-                    this.props.updateAccount(user.data.user_account);
+                    this.props.updateUser(user.data);
                 }
             }).catch((err)=>{
                 this.setState({error: true});

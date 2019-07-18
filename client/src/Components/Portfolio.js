@@ -12,11 +12,15 @@ class Portfolio extends Component{
         this.buyStock = this.buyStock.bind(this);
     }
     buyStock(){
-        if(this.state.price > this.props.getAccount()|| !Number.isInteger(this.state.value) ){
+        let value = Number(this.state.size);
+        if(this.state.price >= this.props.getAccount()|| !Number.isInteger(value) ){
             this.setState({error:true});
         }else{
-            // Buy the Stock
+            // Buy Stock
+            let newAccount = this.props.getAccount() - this.state.price;
+            this.props.updateAccount(newAccount);
 
+            // save Transaction 
         }
     }
     getStocks(){
@@ -29,13 +33,7 @@ class Portfolio extends Component{
         })
     }
     selectStock(e){
-        if(!e.target.value == ''){
-            let newPrice = this.state.price;
-            newPrice *= e.target.value;
-            this.setState({size: e.target.value, price: newPrice})
-        }else{
-            this.setState({size: e.target.value})
-        }
+        this.setState({size: e.target.value})
     }
     // Symbol Price Stock
     stockClick(e){
@@ -45,20 +43,19 @@ class Portfolio extends Component{
 
     }
     componentDidMount(){
-
-    }
-    ErrorMessage(){
-
+        if(this.state.stockArray.length ==0)
+            this.getStocks();
     }
     render(){
+        
         let ErrorMessage;
         if(this.state.error){
             ErrorMessage = <div> 
-                Please Make Sure You Have An is Integer And Enough Cash!
+                Please Make Sure You Have Enough Cash!
+                <br/>
+                Or You Have Selected A Whole Number
             </div>
         }
-        if(this.state.stockArray.length ==0)
-            this.getStocks();
         return (
             <div>
             <h1 id='Portfolio'> Portfolio</h1>
@@ -82,11 +79,11 @@ class Portfolio extends Component{
                     <div>
                         <div id='Purchase'>Cash - {this.props.getAccount()}</div>
                         <br/>
-                        <input readOnly value ={this.state.price} className = 'input'/>
+                        <input readOnly value ={this.state.price*this.state.size} className = 'input'/>
                         <br/>
                         <input onChange={this.selectStock} value={this.state.size} className = 'input'/>
                         <br/>
-                        <button className = 'button'> BUY</button>
+                        <button onClick={this.buyStock} className = 'button'> BUY</button>
                     </div>
                     {ErrorMessage}
                 </div>
