@@ -29,9 +29,7 @@ class App extends Component {
     this.setState({User:x});
   }
   updateTransaction(x){
-    let array = this.state.Transaction;
-    array.push(x);
-    this.setState({Transaction: array});
+    console.log(x);
   }
   updateAccount(x){
     let email = this.state.User.email;
