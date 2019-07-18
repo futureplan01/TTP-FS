@@ -17,26 +17,48 @@ function ErrorPage(){
 class App extends Component {
   constructor (){
     super();
-    this.state = {Account: 0, Transaction: []}
+    this.state = {Account: 0, Transaction: []};
     this.updateTransaction = this.updateTransaction.bind(this);
-    this.changeAccount = this.changeAccount.bind(this);
+    this.updateAccount = this.updateAccount.bind(this);
+    this.getAccount = this.getAccount.bind(this);
+    this.getTransaction = this.getTransaction.bind(this);
   }
+
   updateTransaction(x){
     let array = this.state.Transaction;
     array.push(x);
     this.setState({Transaction: array});
   }
-  changeAccount(x){
+  updateAccount(x){
     this.setState({Account: x});
   }
+  getTransaction(){
+    return this.state.Transaction
+  }
+  getAccount(){
+    return this.state.Account;
+  }
+
 
   render(){
     return (
       <Switch>
-        <Route exact path = "/" component={SignIn} changeAccount = {this.changeAccount} />
-        <Route exact path = "/Portfolio" component={Portfolio} changeAccount={this.changeAccount} updateTransaction ={this.updateTransaction} account={this.state.Account}/>
-        <Route exact path = "/Transaction" component={Transaction} allTransaction={this.state.Transaction} />
-        <Route exact path = "/Register" component={Register} changeAccount ={this.changeAccount}/>
+        <Route exact path = "/" render={()=>
+          <SignIn updateAccount={this.updateAccount} />
+        } />
+        
+        <Route exact path = "/Portfolio" render={()=>
+          <Portfolio updateAccount={this.updateAccount} updateTransaction ={this.updateTransaction} getAccount={this.getAccount}/>
+        }/>
+
+        <Route exact path = "/Transaction" render={()=>
+         <Transaction getTransaction={this.getTransaction}/>
+        }/>
+
+        <Route exact path = "/Register" render={()=>
+         <Register changeAccount={this.changeAccount}/>
+        }/>
+
         <Route component = {ErrorPage}/>
       </Switch>
     );

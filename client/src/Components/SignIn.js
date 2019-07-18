@@ -11,6 +11,7 @@ class SignIn extends Component{
         this.KeyUp = this.KeyUp.bind(this);
     }
     KeyUp(e){
+        
         if(e.key === 'Enter'){
             axios.post('http://localhost:3010/SignIn',{
                 crossDomain:true,
@@ -18,9 +19,9 @@ class SignIn extends Component{
                 password: this.state.password
             })
             .then((user)=>{
-                console.log(user);
                 if(user){
                     this.setState({isAuth: true});
+                    this.props.updateAccount(user.data.user_account);
                 }
             }).catch((err)=>{
                 this.setState({error: true});
@@ -48,7 +49,6 @@ class SignIn extends Component{
         
         
         return (
-            
             <div id='SignInContainer'> 
                 <div>
                 <h1 id='SignIn' className='center'>Sign In</h1>

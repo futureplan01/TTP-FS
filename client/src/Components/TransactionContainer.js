@@ -6,7 +6,7 @@ function TransactionContainer (props){
     return (
         <div>
             <Header/>
-            <Transaction/>
+            <Transaction getTransaction={props.getTransaction}/>
         </div>
     );
 }
