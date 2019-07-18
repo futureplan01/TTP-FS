@@ -27,6 +27,7 @@ router.post('/Register', (req,res)=>{
                         user_name: req.body.name,
                         user_email: req.body.email,
                         user_password: hash,
+                        user_transaction: [],
                         user_account: 5000,
                     });
                     user.save((err,registerUser)=>{
@@ -65,7 +66,8 @@ router.post('/SignIn', (req,res)=>{
             if(isMatch){
                 let userInfo = {
                     email: user.user_email,
-                    account: user.user_account
+                    account: user.user_account,
+                    transaction: user.user_transaction
                 }
                 res.status(200).json(userInfo);
             }else{
@@ -101,16 +103,30 @@ router.post('/updateAccount', (req,res)=>{
 })
 
 // Update Transaction
-router.post('/Transaction', (req,res)=>{
-    let userData = req.body; 
-    let user = new User(userData);
-    user.save((err,registerUser)=>{
-        if(err){
-            console.log(err);
+router.post('/updateTransaction', (req,res)=>{
+    User.findOne({
+        user_email: req.body.email,
+    })
+    .then((users) => {
+        let transaction = req.body.transaction;
+        transaction.setOnInsert.createAt = new Date();
+        if(users){
+            users.user_transaction.push(req.body.transaction);
         }else{
-            res.status(200).send(registerUser);
+            res.status(401).json({success: false, message: "Wrong email/password"});
         }
-    });
+        users.save((err,savedUser)=>{
+            if(err){
+                res.status(401).json({Error: err});
+            }else{
+                let userInfo ={
+                    transaction: users.user_transaction
+                }
+                res.status(200).json(userInfo);
+            }
+        })
+    })
+    ;
 })
 
 

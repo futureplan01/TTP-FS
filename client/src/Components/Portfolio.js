@@ -18,14 +18,21 @@ class Portfolio extends Component{
         }else{
             //confirm
             let answer = window.confirm(`You are about to buy ${this.state.symbol} for ${this.state.price}`);
-            console.log(answer);
             // Buy Stock
             if(answer){
-                let newAccount = this.props.getAccount() - this.state.price;
+                let newAccount = (Number(this.props.getAccount()) - Number(this.state.price)).toFixed(2);
                 this.props.updateAccount(newAccount);
     
                 // save Transaction 
-                this.props.updateTransaction("Hellow, New Transaction");
+                let transaction = {
+                    symbol: this.state.symbol,
+                    price: this.state.price,
+                    size: this.state.size,
+                    setOnInsert: {
+                        createdAt: '',
+                    }
+                }
+                this.props.updateTransaction(transaction);
             }
         }
     }
