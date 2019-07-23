@@ -32,7 +32,9 @@
   padding: 6%;
 }
 #Header{
-  margin-left: 70%
+  margin-left: 70%;
+  display: inline-block;
+  width: 500px;
 }
 #HeaderLeft{
   border-right-color: black;

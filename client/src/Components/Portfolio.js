@@ -16,17 +16,19 @@ class Portfolio extends Component{
         if(this.state.price >= this.props.getAccount()|| !Number.isInteger(value) ){
             this.setState({error:true});
         }else{
+            let totalPrice = this.state.symbol * this.state.size;
+            totalPrice = totalPrice.toFixed(2);
             //confirm
-            let answer = window.confirm(`You are about to buy ${this.state.symbol} for ${this.state.price}`);
+            let answer = window.confirm(`You are about to buy ${this.state.symbol} for ${totalPrice}`);
             // Buy Stock
             if(answer){
-                let newAccount = (Number(this.props.getAccount()) - Number(this.state.price)).toFixed(2);
+                let newAccount = (Number(this.props.getAccount()) - Number(totalPrice));
                 this.props.updateAccount(newAccount);
     
                 // save Transaction 
                 let transaction = {
                     symbol: this.state.symbol,
-                    price: this.state.price,
+                    price: totalPrice,
                     size: this.state.size,
                     setOnInsert: {
                         createdAt: '',
