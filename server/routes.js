@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('./models/db');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const connectDB = require('./models/ConnectDB');
 const router = express.Router();
@@ -30,12 +31,15 @@ router.post('/Register', (req,res)=>{
                         user_transaction: [],
                         user_account: 5000,
                     });
+
                     user.save((err,registerUser)=>{
                         if(err){
                             res.status(400).json({error: err});
                             // send user an error notification
                         }else{
-                            res.status(200).send({message: "success"});
+                            // Idenifies the user
+                            let token = jwt.sign({subject: registerUser._id, iat: Math.floor(Date.now() / 1000) + 60}, 'secret',)
+                            res.status(200).send(token);
                         }
                     });
                 })
@@ -43,6 +47,32 @@ router.post('/Register', (req,res)=>{
         }
     })
     .catch(err => res.json ({error: err}));
+})
+
+router.post('/vertifyToken', (req,res)=>{
+    console.log("entered vertifying token");
+    let token = req.body.token;
+    jwt.verify(token,'secret',(err,value)=>{
+        if(err) {
+            console.log('not working');
+            return res.status(401).json({success: false, message: "Wrong email/password"});
+        }
+        else{
+            console.log("You may proceed");
+        }
+    })
+    User.findOne({
+        _id: req.body._id
+    })
+    .then((user)=>{
+        if(!user) return res.status(401).json({success: false, message: "Wrong email/password"});
+        else{
+            return res.status(200).json({user})
+        }
+    })
+    .catch((err) =>{
+        res.status(401).json({success: false, message: "Wrong email/password"});
+    })
 })
 
 router.get('/AllUsers', (req,res)=>{
@@ -69,6 +99,8 @@ router.post('/SignIn', (req,res)=>{
                     account: user.user_account,
                     transaction: user.user_transaction
                 }
+                 // Idenifies the user
+                 userInfo.token = jwt.sign({subject: user._id, iat: Math.floor(Date.now() / 1000) + 60}, 'secret',)
                 res.status(200).json(userInfo);
             }else{
                 res.status(401).json({success: false, message: "Wrong email/password"});

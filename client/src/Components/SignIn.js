@@ -36,8 +36,11 @@ class SignIn extends Component{
     
     render(){
         let ErrorMessage;
-        if(this.state.isAuth){
+        if(!!localStorage.getItem('token')){
+            console.log(localStorage.getItem('token'));
             return(<Redirect to="/portfolio"/>)
+        }else{
+            console.log('User is not authenticated');
         }
 
         if(this.state.error){

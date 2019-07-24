@@ -23,11 +23,35 @@ class App extends Component {
     this.updateAccount = this.updateAccount.bind(this);
     this.getAccount = this.getAccount.bind(this);
     this.getTransaction = this.getTransaction.bind(this);
+    this.vertifyToken = this.vertifyToken.bind(this);
     this.updateUser=this.updateUser.bind(this);
   }
   updateUser(x){
+    console.log(x.token);
+    // how do I know when it works?
+    localStorage.setItem('token', x.token);
     this.setState({User:x});
   }
+
+  vertifyToken(){
+    let value = localStorage.getItem('token');
+    if(!value) {
+      console.log("No Token")
+      //return false;
+    }
+
+    axios.post('http://localhost:3010/vertifyToken',{
+      crossDomain:true,
+      token:value
+    })
+    .then((user)=>{
+      console.log(user);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
   updateTransaction(x){
     axios.post('http://localhost:3010/updateTransaction',{
       crossDomain:true,
@@ -42,6 +66,7 @@ class App extends Component {
     })
     .catch((err)=>{console.log(err)})
   }
+
   updateAccount(x){
     console.log()
     let email = this.state.User.email;
@@ -60,6 +85,7 @@ class App extends Component {
 
     this.setState({User:{email:email,account:x}});
   }
+
   getTransaction(){
     return this.state.User.transaction;
   }
@@ -76,7 +102,7 @@ class App extends Component {
         } />
         
         <Route exact path = "/Portfolio" render={()=>
-          <Portfolio updateAccount={this.updateAccount} updateTransaction ={this.updateTransaction} getAccount={this.getAccount}/>
+          <Portfolio updateAccount={this.updateAccount} vertifyToken={this.vertifyToken} updateTransaction ={this.updateTransaction} getAccount={this.getAccount}/>
         }/>
 
         <Route exact path = "/Transaction" render={()=>

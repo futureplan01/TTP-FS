@@ -58,7 +58,11 @@ class Portfolio extends Component{
 
     }
     componentDidMount(){
-        if(this.state.stockArray.length ==0)
+        // vertify if user already logged in
+        console.log("vertifying")
+        this.props.vertifyToken();
+
+        if(this.state.stockArray.length ===0)
             this.getStocks();
     }
     render(){

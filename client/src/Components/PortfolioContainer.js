@@ -7,7 +7,7 @@ function PortfolioContainer (props){
     return (
         <div>
             <Header/>
-            <Portfolio updateAccount={props.updateAccount} updateTransaction={props.updateTransaction} getAccount={props.getAccount}/>
+            <Portfolio updateAccount={props.updateAccount} vertifyToken={props.vertifyToken} updateTransaction={props.updateTransaction} getAccount={props.getAccount}/>
         </div>
     );
 }
