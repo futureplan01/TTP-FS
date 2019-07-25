@@ -50,7 +50,7 @@ router.post('/Register', (req,res)=>{
     .catch(err => res.json ({error: err}));
 })
 
-router.post('/vertifyToken', (req,res)=>{
+router.post('/verifyToken', (req,res)=>{
     console.log("entered vertifying token");
     let token = req.body.token;
     jwt.verify(token,'secret',(err,value)=>{
@@ -59,23 +59,29 @@ router.post('/vertifyToken', (req,res)=>{
             return res.status(401).json({success: false, message: "Wrong email/password"});
         }
         else{
-            console.log("You may proceed");
+            User.findOne({
+                _id: value.subject
+            })
+            .then((user)=>{
+                if(!user){
+                    throw new Error({Success: failed,message:"no user with this id"});
+                } 
+                else{
+                    let foundUser = {
+                        email:user.user_email,
+                        account: user.user_account, 
+                        transaction: user.user_transaction
+                    }
+                    return res.status(200).json({foundUser})
+                }
+            })
+            .catch((err) =>{
+                res.status(401).json({success: false, message: "Wrong email/password"});
+            })
         }
     })
-    User.findOne({
-        _id: req.body._id
-    })
-    .then((user)=>{
-        if(!user){
-            throw new Error({Success: failed,message:"no user with this id"});
-        } 
-        else{
-            return res.status(200).json({user})
-        }
-    })
-    .catch((err) =>{
-        res.status(401).json({success: false, message: "Wrong email/password"});
-    })
+
+
 })
 
 router.get('/AllUsers', (req,res)=>{
@@ -103,7 +109,7 @@ router.post('/SignIn', (req,res)=>{
                     transaction: user.user_transaction
                 }
                  // Idenifies the user
-                 userInfo.token = jwt.sign({subject: user._id, iat: Math.floor(Date.now() / 1000) + 60}, 'secret',)
+                 userInfo.token = jwt.sign({subject: user._id, exp: Math.floor(Date.now() / 1000) + 30}, 'secret',)
                 res.status(200).json(userInfo);
             }else{
                 res.status(401).json({success: false, message: "Wrong email/password"});

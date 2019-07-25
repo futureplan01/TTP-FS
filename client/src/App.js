@@ -26,7 +26,7 @@ function ErrorPage(){
 class App extends Component {
   constructor (){
     super();
-    this.state = { Transaction: [], isAuth: false, User: {email:'',account: 0, transaction: []}};
+    this.state = {isAuth: false, User: {email:'',account: 0, transaction: []}};
     this.updateTransaction = this.updateTransaction.bind(this);
     this.updateAccount = this.updateAccount.bind(this);
     this.getAccount = this.getAccount.bind(this);
@@ -35,8 +35,6 @@ class App extends Component {
     this.updateUser=this.updateUser.bind(this);
   }
   updateUser(x){
-    console.log(x.token);
-    // how do I know when it works?
     localStorage.setItem('token', x.token);
     this.setState({User:x,isAuth:true});
   }
@@ -46,12 +44,12 @@ class App extends Component {
     if(!value) {
       return false;
     }else{
-      axios.post('http://localhost:3010/vertifyToken',{
+      axios.post('http://localhost:3010/verifyToken',{
         crossDomain:true,
         token:value
       })
       .then((user)=>{
-        this.setState({isAuth:true});
+        this.setState({User:user.data.foundUser,isAuth:true});
       })
       .catch((err)=>{
         console.log(err);

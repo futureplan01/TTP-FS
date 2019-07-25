@@ -6,7 +6,7 @@ class Portfolio extends Component{
     
     constructor (props){
         super(props);
-        if(!this.props.isAuth) this.props.vertifyToken()
+        if(!this.props.isAuth) this.props.verifyToken()
         this.state = {isAuth:false,stockArray: [], symbol: '', price:0,size: 1,error:false};
         this.getStocks = this.getStocks.bind(this);
         this.stockClick = this.stockClick.bind(this);
@@ -60,12 +60,12 @@ class Portfolio extends Component{
 
     }
     componentDidMount(){
-        if(this.state.stockArray.length ===0 && this.state.isAuth)
+        if(this.state.stockArray.length ===0 && this.props.isAuth)
         this.getStocks();
         
     }
     render(){
-        if(!this.state.isAuth){
+        if(!this.props.isAuth){
             return(<Redirect to ="/"/>)
         }
         let ErrorMessage;

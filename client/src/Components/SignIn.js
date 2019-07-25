@@ -44,7 +44,6 @@ class SignIn extends Component{
             return(<Redirect to ="/Portfolio"/>)
         }
         
-        
         return (
             <div id='SignInContainer'> 
                 <div>
