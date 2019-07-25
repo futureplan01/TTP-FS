@@ -8,6 +8,7 @@ const axios = require('axios');
 
 connectDB.connect();
 
+
 router.post('/Register', (req,res)=>{
     User.findOne({
         user_email: req.body.email
@@ -65,7 +66,9 @@ router.post('/vertifyToken', (req,res)=>{
         _id: req.body._id
     })
     .then((user)=>{
-        if(!user) return res.status(401).json({success: false, message: "Wrong email/password"});
+        if(!user){
+            throw new Error({Success: failed,message:"no user with this id"});
+        } 
         else{
             return res.status(200).json({user})
         }

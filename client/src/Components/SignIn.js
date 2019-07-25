@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Redirect, Link} from 'react-router-dom';
+import {Redirect,Link} from 'react-router-dom';
 
 class SignIn extends Component{
     constructor(props){
         super(props);
-        this.state = {email:'', password: '',isAuth: false,error: false};
+        this.state = {email:'', password: '',error: false};
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.KeyUp = this.KeyUp.bind(this);
@@ -19,7 +19,6 @@ class SignIn extends Component{
             })
             .then((user)=>{
                 if(user){
-                    this.setState({isAuth: true});
                     this.props.updateUser(user.data);
                 }
             }).catch((err)=>{
@@ -36,17 +35,13 @@ class SignIn extends Component{
     
     render(){
         let ErrorMessage;
-        if(!!localStorage.getItem('token')){
-            console.log(localStorage.getItem('token'));
-            return(<Redirect to="/portfolio"/>)
-        }else{
-            console.log('User is not authenticated');
-        }
-
         if(this.state.error){
             ErrorMessage = <div className = "center"> 
             <Link to="/Register">Register </Link>
             </div>
+        }
+        if(this.props.isAuth){
+            return(<Redirect to ="/Portfolio"/>)
         }
         
         

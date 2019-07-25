@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 import jsonp from 'jsonp';
 
 class Portfolio extends Component{
     
     constructor (props){
         super(props);
-        this.state = {stockArray: [], symbol: '', price:0,size: 1,error:false};
+        if(!this.props.isAuth) this.props.vertifyToken()
+        this.state = {isAuth:false,stockArray: [], symbol: '', price:0,size: 1,error:false};
         this.getStocks = this.getStocks.bind(this);
         this.stockClick = this.stockClick.bind(this);
         this.selectStock = this.selectStock.bind(this);
@@ -58,15 +60,14 @@ class Portfolio extends Component{
 
     }
     componentDidMount(){
-        // vertify if user already logged in
-        console.log("vertifying")
-        this.props.vertifyToken();
-
-        if(this.state.stockArray.length ===0)
-            this.getStocks();
+        if(this.state.stockArray.length ===0 && this.state.isAuth)
+        this.getStocks();
+        
     }
     render(){
-        
+        if(!this.state.isAuth){
+            return(<Redirect to ="/"/>)
+        }
         let ErrorMessage;
         if(this.state.error){
             ErrorMessage = <div> 

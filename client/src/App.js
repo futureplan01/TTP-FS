@@ -9,6 +9,14 @@ import Portfolio from './Components/PortfolioContainer';
 import Transaction from './Components/TransactionContainer';
 import Register from './Components/Register';
 
+/*
+  Routes Are Handled in the Main App.js
+
+  Portfolio and Transaction Routes have a container
+  Therefore any props passed to through the Portfolio and Transaction routes
+  Must Also be passed through the container to the Actual Components.
+*/
+
 function ErrorPage(){
   return (<div>
     <h3>No match for <code>{window.location.href }</code></h3>
@@ -18,38 +26,38 @@ function ErrorPage(){
 class App extends Component {
   constructor (){
     super();
-    this.state = { Transaction: [], User: {email:'',account: 0, transaction: []}};
+    this.state = { Transaction: [], isAuth: false, User: {email:'',account: 0, transaction: []}};
     this.updateTransaction = this.updateTransaction.bind(this);
     this.updateAccount = this.updateAccount.bind(this);
     this.getAccount = this.getAccount.bind(this);
     this.getTransaction = this.getTransaction.bind(this);
-    this.vertifyToken = this.vertifyToken.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
     this.updateUser=this.updateUser.bind(this);
   }
   updateUser(x){
     console.log(x.token);
     // how do I know when it works?
     localStorage.setItem('token', x.token);
-    this.setState({User:x});
+    this.setState({User:x,isAuth:true});
   }
 
-  vertifyToken(){
+  verifyToken(){
     let value = localStorage.getItem('token');
     if(!value) {
-      console.log("No Token")
-      //return false;
+      return false;
+    }else{
+      axios.post('http://localhost:3010/vertifyToken',{
+        crossDomain:true,
+        token:value
+      })
+      .then((user)=>{
+        this.setState({isAuth:true});
+      })
+      .catch((err)=>{
+        console.log(err);
+        return false;
+      })
     }
-
-    axios.post('http://localhost:3010/vertifyToken',{
-      crossDomain:true,
-      token:value
-    })
-    .then((user)=>{
-      console.log(user);
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
   }
 
   updateTransaction(x){
@@ -65,6 +73,10 @@ class App extends Component {
       }
     })
     .catch((err)=>{console.log(err)})
+  }
+
+  IsAuthTrue(){
+    this.setState()
   }
 
   updateAccount(x){
@@ -98,11 +110,11 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path = "/" render={()=>
-          <SignIn updateAccount={this.updateAccount} updateUser={this.updateUser}/>
+          <SignIn updateAccount={this.updateAccount} isAuth={this.state.isAuth} updateUser={this.updateUser}/>
         } />
         
         <Route exact path = "/Portfolio" render={()=>
-          <Portfolio updateAccount={this.updateAccount} vertifyToken={this.vertifyToken} updateTransaction ={this.updateTransaction} getAccount={this.getAccount}/>
+          <Portfolio updateAccount={this.updateAccount} isAuth={this.state.isAuth}  verifyToken={this.verifyToken} updateTransaction ={this.updateTransaction} getAccount={this.getAccount}/>
         }/>
 
         <Route exact path = "/Transaction" render={()=>
