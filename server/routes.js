@@ -4,9 +4,21 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const connectDB = require('./models/ConnectDB');
 const router = express.Router();
-const axios = require('axios');
+const jsonp = require('jsonp');
 
 connectDB.connect();
+
+// For Mobile Devices
+router.get('/MobileDataRequest', (req,res)=>{
+    jsonp('https://ws-api.iextrading.com/1.0/tops/last',null,(err,data)=>{
+        if(err){
+            console.log(err);
+            return res.status(501).json({err});
+        }else{
+            return res.status(200).json({data});
+        }
+    })
+})
 
 
 router.post('/Register', (req,res)=>{
