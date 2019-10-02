@@ -3,9 +3,11 @@ const User = require('./models/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const connectDB = require('./models/ConnectDB');
+const dotenv = require('dotenv').config();
 const router = express.Router();
 const jsonp = require('jsonp');
 const axios = require('axios');
+
 
 connectDB.connect();
 
@@ -158,6 +160,22 @@ router.post('/updateAccount', (req,res)=>{
             }
         });
     });
+})
+
+// Sends Text
+router.post('/sendText', (req,res)=>{
+    let phone = req.body.phone;
+    const accountSid = process.env.TWILIO_SID;
+    const auth = process.env.TWILIO_AUTH;
+    const client = require('twilio')(accountSid,auth);
+
+    client.messages
+    .create({
+        body: 'HELLO THERE',
+        from: '+12512748514',
+        to: phone
+    })
+
 })
 
 // Update Transaction
